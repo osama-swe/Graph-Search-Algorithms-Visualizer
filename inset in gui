@@ -1,0 +1,43 @@
+from PyQt5 import QtCore, QtGui, QtWidgets
+import matplotlib.pyplot as plt
+import main as main
+import networkx as nx
+from networkx.drawing.nx_pydot import graphviz_layout
+
+self.pushButton = QtWidgets.QPushButton(self.centralwidget, clicked = lambda : self.run()) # in push button
+
+
+      def run(self):
+        depthlimit = self.depth_limit_lineEdit.text()
+        goals = self.lineEdit.text().split()
+        start = int(self.lineEdit_2.text())
+        number_of_nodes = int(self.lineEdit_3.text())
+        edges = self.textEdit.toPlainText().split('\n')
+
+        formatted_edges = []
+
+        for i in range(len(edges)):
+            tuple = (int(edges[i][0]), int(edges[i][2]))
+            formatted_edges.append(tuple)
+
+        G = nx.Graph()
+        G.add_nodes_from(range(1, number_of_nodes + 1))
+        G.add_edges_from(formatted_edges)
+
+        plt.figure("Graph")
+        color_map = []
+        for i in range(1, number_of_nodes + 1):
+            if i == start:
+                color_map.append('gold')
+            elif str(i) in goals:
+                color_map.append('lightgreen')
+            else:
+                color_map.append('lightgray')
+        nx.draw_networkx(G, node_color=color_map, pos=graphviz_layout(G), arrows=False,
+                         with_labels=True)
+        plt.show()
+
+        if self.dfsButton.isChecked():
+            print("DFS starts")
+            path = main.dfs(start, goals, G)
+            print(f"path is {path}")
