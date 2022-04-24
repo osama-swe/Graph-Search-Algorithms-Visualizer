@@ -214,7 +214,10 @@ class Ui_MainWindow(object):
             print("DFS starts")
             path = main.dfs(start, goals, G)
             print(f"path is {path}")
-
+        if self.bfsButton.isChecked():
+            print("BFS starts")
+            path = main.bfs(start, goals, G)
+            print(f"path is {path}")
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
