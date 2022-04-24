@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 import main as main
 import networkx as nx
 from networkx.drawing.nx_pydot import graphviz_layout
+import sys
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -37,7 +39,7 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.label.setFont(font)
         self.label.setObjectName("label")
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget, clicked = lambda : self.run())
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget, clicked=lambda: self.run())
         self.pushButton.setGeometry(QtCore.QRect(740, 610, 101, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
@@ -178,25 +180,22 @@ class Ui_MainWindow(object):
         self.lineEdit_3.setPlaceholderText(_translate("MainWindow", "enter nodes number"))
         self.label_3.setText(_translate("MainWindow", "Number of Nodes"))
         self.label_4.setText(_translate("MainWindow", "Edges"))
-        self.textEdit.setPlaceholderText(_translate("MainWindow", "edge connecting nodes 1 and 2 is represented by:            1 2"))
+        self.textEdit.setPlaceholderText(
+            _translate("MainWindow", "edge connecting nodes 1 and 2 is represented by:            1 2"))
 
     def run(self):
-        depthlimit = self.depth_limit_lineEdit.text()
+
         goals = self.lineEdit.text().split()
         start = int(self.lineEdit_2.text())
         number_of_nodes = int(self.lineEdit_3.text())
         edges = self.textEdit.toPlainText().split('\n')
-
         formatted_edges = []
-
         for i in range(len(edges)):
             tuple = (int(edges[i][0]), int(edges[i][2]))
             formatted_edges.append(tuple)
-
         G = nx.Graph()
         G.add_nodes_from(range(1, number_of_nodes + 1))
         G.add_edges_from(formatted_edges)
-
         plt.figure("Graph")
         color_map = []
         for i in range(1, number_of_nodes + 1):
@@ -206,17 +205,24 @@ class Ui_MainWindow(object):
                 color_map.append('lightgreen')
             else:
                 color_map.append('lightgray')
-        nx.draw_networkx(G, node_color=color_map, pos=graphviz_layout(G), arrows=False,
-                         with_labels=True)
+        nx.draw_networkx(G, node_color=color_map, pos=graphviz_layout(G), arrows=False, with_labels=True)
         plt.show()
 
         if self.dfsButton.isChecked():
-            print("DFS starts")
-            path = main.dfs(start, goals, G)
-            print(f"path is {path}")
+            main.dfs(start, goals, G)
+
+        if self.bfsButton.isChecked():
+            main.bfs(start, goals, G)
+
+        if self.depth_limitedButton.isChecked():
+            depthlimit = int(self.depth_limit_lineEdit.text())
+            if depthlimit < 0:
+                print("Invalid depth limit")
+            else:
+                main.depth_limited(start, goals, G, depthlimit)
+
 
 if __name__ == "__main__":
-    import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
