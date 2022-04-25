@@ -88,7 +88,6 @@ def depth_limited(node, goals, G, depthlimit):
 
     print("Goal not found")
 
-
 """
 1 2
 2 3

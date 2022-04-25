@@ -15,7 +15,6 @@ import networkx as nx
 from networkx.drawing.nx_pydot import graphviz_layout
 import sys
 
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
