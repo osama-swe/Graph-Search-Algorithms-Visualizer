@@ -220,6 +220,9 @@ class Ui_MainWindow(object):
             else:
                 main.depth_limited(start, goals, G, depthlimit)
 
+        if self.iterative_deepingButton.isChecked():
+            main.iterative_deepening(start, goals, G)
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

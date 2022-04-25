@@ -88,6 +88,66 @@ def depth_limited(node, goals, G, depthlimit):
 
     print("Goal not found")
 
+def get_max_depth(node, G):
+    depth = 0
+    visited = []
+    stack = [node]
+    number_of_nodes_in_current_level = len(stack)
+    while stack:
+        node = stack.pop()
+        if node not in visited:
+            visited.append(node)
+        number_of_nodes_in_current_level -= 1
+        if number_of_nodes_in_current_level == -1:
+            depth += 1
+            number_of_nodes_in_current_level = len(stack)
+        for neighbour in G[node]:
+            if neighbour not in visited:
+                stack.append(neighbour)
+    return depth
+
+
+def iterative_deepening(node, goals, G):
+    max_depth = get_max_depth(node, G)
+    global_visited = []
+    parent = dict()  # dictionary to hold the parent of each node in order to find solution path
+    solution_path = []
+    start = node
+    for depthlimit in range(max_depth + 1):
+        #print(f"Depth limited with depth = {depthlimit} starts ", end='')
+        visited = []
+        stack = [start]
+        depth = 0
+        number_of_nodes_in_current_level = len(stack)
+        while stack:
+            node = stack.pop()
+            if node not in visited:
+                visited.append(node)
+                global_visited.append(node)
+                if str(node) in goals:
+                    solution_path.append(node)
+                    curr = node
+                    while not curr == start:
+                        val = parent.pop(curr)
+                        solution_path.append(val)
+                        curr = val
+                    solution_path.reverse()
+                    print(f"search path is {global_visited} \nsolution path is {solution_path} ")
+                    return
+            number_of_nodes_in_current_level -= 1
+            if number_of_nodes_in_current_level == -1:
+                depth += 1
+                number_of_nodes_in_current_level = len(stack)
+            if depth < depthlimit:
+                for neighbour in G[node]:
+                    if neighbour not in visited:
+                        stack.append(neighbour)
+                        parent[neighbour] = node
+
+    print("Goal not found")
+
+
+
 """
 1 2
 2 3
